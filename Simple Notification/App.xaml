@@ -1,0 +1,18 @@
+﻿<Application
+    x:Class="Simple_Notification.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Simple_Notification"
+    RequestedTheme="Light" >
+
+    <!--アプリケーションリソース-->
+    <Application.Resources>
+        <local:MyToastContents xmlns="using:Simple_Notification" x:Key="myToastContents"/> <!-- using:SimpleNotificationではエラー -->
+
+        <!-- nugetパッケージ WinUI 用-->
+        <!--<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" x:Key="xmlControlsResources" />-->
+    </Application.Resources>
+
+
+
+</Application>

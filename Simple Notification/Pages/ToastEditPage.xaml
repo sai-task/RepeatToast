@@ -1,0 +1,83 @@
+﻿<local:AbstractEditPage
+    x:Class="Simple_Notification.ToastEditPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Simple_Notification"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <NavigationView PaneTitle="Edit Toast" PaneDisplayMode="Top" IsBackEnabled="True" AlwaysShowHeader="False" x:Name="NavView" BackRequested="NavView_BackRequested" SelectionChanged="NavView_SelectionChanged">
+        <NavigationView.MenuItems>
+            <NavigationViewItem Tag="Home" Icon="Home" Content="Home" AccessKey="H"/>
+            <CommandBar DefaultLabelPosition="Right" >
+                <AppBarButton x:Name="SaveAppBarButton" Icon="Save" AccessKey="S" Label="Save" Content="Save" Click="SaveButton_Click"/>
+                <AppBarButton Icon="Cancel" AccessKey="C" Label="Cancel" Content="Cancel" Click="CancelButton_Click"/>
+                <AppBarButton AccessKey="T" Content="Test" Click="TestButton_Click"/>
+            </CommandBar>
+        </NavigationView.MenuItems>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" ZoomMode="Enabled" Padding="24" MaxZoomFactor="10">
+            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TextBlock HorizontalAlignment="Left" Text="Edit" FontSize="18"/>
+                <TextBox x:Name="Title" Text="{x:Bind _toast.Options.Title}" PlaceholderText="Title" Header="*Title" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,24,0,0"/>
+                <TextBox x:Name="MyContent" Text="{x:Bind _toast.Options.Content}" Header="*Content" PlaceholderText="Content" AcceptsReturn="True" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="120" Margin="0,24,0,0"/>
+
+                <!-- リピート設定 -->
+                <CheckBox x:Name="Repeatable" Content="Repeat" Checked="Repeatable_Checked" Unchecked="Repeatable_Unchecked" Margin="0,24,0,0"/>
+                <StackPanel x:Name="RepeatSettings">
+                    <ComboBox x:Name="RepeatTypeComboBox" SelectedIndex="1" Visibility="Visible" SelectionChanged="RepeatTypeComboBox_SelectionChanged">
+                        <x:String>Hourly</x:String>
+                        <x:String>Daily</x:String>
+                        <x:String>Weekly</x:String>
+                        <x:String>Monthly</x:String>
+                    </ComboBox>
+                    <!-- 毎週の場合の設定 -->
+                    <VariableSizedWrapGrid Orientation="Horizontal" x:Name="DayChecker">
+                        <CheckBox Content="Sun." IsChecked="{x:Bind _toast.Options.Sunday}" Checked="Sunday_Checked" Unchecked="Sunday_Unchecked"/>
+                        <CheckBox Content="Mon." IsChecked="{x:Bind _toast.Options.Monday}" Checked="Monday_Checked" Unchecked="Monday_Unchecked"/>
+                        <CheckBox Content="Tues." IsChecked="{x:Bind _toast.Options.Tuesday}" Checked="Tuesday_Checked" Unchecked="Tuesday_Unchecked"/>
+                        <CheckBox Content="Wed." IsChecked="{x:Bind _toast.Options.Wednesday}" Checked="Wednesday_Checked" Unchecked="Wednesday_Unchecked"/>
+                        <CheckBox Content="Thurs." IsChecked="{x:Bind _toast.Options.Thursday}" Checked="Thursday_Checked" Unchecked="Thursday_Unchecked"/>
+                        <CheckBox Content="Fri." IsChecked="{x:Bind _toast.Options.Friday}" Checked="Friday_Checked" Unchecked="Friday_Unchecked"/>
+                        <CheckBox Content="Sat." IsChecked="{x:Bind _toast.Options.Saturday}" Checked="Saturday_Checked" Unchecked="Saturday_Unchecked"/>
+                    </VariableSizedWrapGrid>
+                    <!-- 毎月の場合の設定-->
+                    <ComboBox x:Name="DayNotExist" Header="Day that doesn't exist">
+                        <x:String>Send toast last day of month</x:String>
+                        <x:String>Not send</x:String>
+                    </ComboBox>
+                </StackPanel>
+                <!-- 日付 -->
+                <RelativePanel>
+                    <DatePicker Date="{x:Bind _toast.Options.FirstDateTimeOffset}" x:Name="Date" Header="*Date" Margin="0,24,0,0" SelectedDateChanged="Date_SelectedDateChanged"/>
+                    <TextBlock RelativePanel.RightOf="Date"  Foreground="Red" Text="日付を入力してください" x:Name="NullDateAlertText" Visibility="Collapsed" Margin="0,50,0,0" />
+                </RelativePanel>
+                <!-- 時刻 -->
+                <RelativePanel>
+                    <TimePicker Time="{x:Bind _toast.Options.FirstDateTimeOffset.TimeOfDay}" x:Name="Time" Header="*Time" Margin="0,24,0,0" SelectedTimeChanged="Time_SelectedTimeChanged"/>
+                    <TextBlock RelativePanel.RightOf="Time"  Foreground="Red" Text="時刻を入力してください" x:Name="NullTimeAlertText" Visibility="Collapsed" Margin="0,50,0,0" />
+                </RelativePanel>
+
+                <!-- 終了期限 -->
+                <CheckBox IsChecked="{x:Bind _toast.Options.HasEnd}" x:Name="EndCheckBox" Checked="HasEnd_Checked" Unchecked="HasEnd_Unchecked" Content="End" Margin="0,24,0,0"/>
+                <StackPanel x:Name="EndDateAndTime">
+                    <RelativePanel>
+                        <DatePicker Date="{x:Bind _toast.Options.LastDateTimeOffset, Mode=OneTime}" x:Name="EndDate" Header="EndDate" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,24,0,0" Visibility="Visible"/>
+                        <TextBlock RelativePanel.RightOf="EndDate"  Foreground="Red" Text="日付を入力してください" x:Name="NullEndDateAlertText" Visibility="Collapsed" Margin="0,50,0,0" />
+                    </RelativePanel>
+                    <RelativePanel>
+                        <TimePicker x:Name="EndTime" Time="{x:Bind _toast.Options.LastDateTimeOffset.TimeOfDay, Mode=OneTime}" Header="EndTime" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,24,0,0" Visibility="Visible"/>
+                        <TextBlock RelativePanel.RightOf="EndTime"  Foreground="Red" Text="時刻を入力してください" x:Name="NullEndTimeAlertText" Visibility="Collapsed" Margin="0,50,0,0" />
+                    </RelativePanel>
+                </StackPanel>
+                <!-- ミュート設定 -->
+                <CheckBox IsChecked="{x:Bind _toast.Options.IsMute}" x:Name="MuteButton" Content="Mute" Height="50" Width="50" Checked="MuteButton_Checked" Unchecked="MuteButton_Unchecked"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="CreateButon" Click="SaveButton_Click" Content="Save" Margin="0,24,0,0"/>
+                    <Button Click="CancelButton_Click" Content="Cancel" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="24,24,0,0"/>
+                    <TextBlock  Foreground="Red" Text="日時が過去です" x:Name="PastDateTimeAlertText" Visibility="Collapsed" Margin="0,24,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </NavigationView>
+</local:AbstractEditPage>
