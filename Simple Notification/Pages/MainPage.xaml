@@ -1,0 +1,85 @@
+﻿<local:BasePage
+    x:Class="Simple_Notification.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Simple_Notification"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="Microsoft.Toolkit.Uwp.UI.Controls"
+    DataContext="{StaticResource myToastContents}"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
+    <local:BasePage.Resources>
+        <local:NextDateTimeToStringConverter xmlns="using:Simple_Notification" x:Key="Ndt2StrConverter"/>
+        <local:TitleToStringConverter xmlns="using:Simple_Notification" x:Key="Title2StrConverter"/>
+        <!-- <local:FreqToIconConverter xmlns="using:Simple_Notification" x:Key="RType2IconConverter"/> RType2IconConverterは未完成-->
+        <local:OptionsToDateTimeSettingConverter xmlns="using:Simple_Notification" x:Key="Options2DtSettingConverter"/>
+        <local:IsSelectedToToggleAccessKeyConverter xmlns="using:Simple_Notification" x:Key="IsSelected2ToggleKeyConverter"/>
+    </local:BasePage.Resources>
+    <NavigationView PaneTitle="Simple Notification" PaneDisplayMode="Top" IsBackButtonVisible="Auto" IsBackEnabled="False" AlwaysShowHeader="False" x:Name="NavView" SelectionChanged="NavView_SelectionChanged">
+        <NavigationView.MenuItems>
+            <NavigationViewItem Tag="debug" Content="Debug" />
+            <NavigationViewItemSeparator/>
+            <NavigationViewItem Tag="Command">
+                <CommandBar DefaultLabelPosition="Right" Grid.Row="1" IsTabStop="True">
+                    <AppBarButton x:Name="AddAppBarButton" Click="AddAppBarButton_Click" Icon="Add" AccessKey="A" Tag="Add" Content="Add" ToolTipService.ToolTip="追加"/>
+                    <AppBarButton x:Name="EditAppBarButton" Click="EditAppBarButton_Click" Icon="Edit" AccessKey="E" ToolTipService.ToolTip="編集"/>
+                    <AppBarButton x:Name="DeleteAppBarButton" Click="DeleteAppBarButton_Click" Icon="Delete" AccessKey="D" Tag="Delete" Content="Delete" ToolTipService.ToolTip="削除"/>
+                    <AppBarButton x:Name="BackupAppBarButton" Click="BackupAppBarButton_Click" AccessKey="B" Content="Backup"/>
+                    <AppBarButton x:Name="RestoreAppBarButton" Click="RestoreAppBarButton_Click" AccessKey="R" Content="Restore"/>
+                </CommandBar>
+            </NavigationViewItem>
+        </NavigationView.MenuItems>
+        <StackPanel>
+            <ListView x:Name="ToastLV" ItemsSource="{Binding Path=''}" SelectionMode="Single" SelectionChanged="ToastLV_SelectionChanged" IsItemClickEnabled="False" HorizontalAlignment="Stretch">
+                <ListView.ItemTemplate>
+                    <DataTemplate  x:DataType="local:MyToastContent">
+                        <Grid Padding="5" Background="{Binding MyBackgroundColor}" HorizontalAlignment="Stretch" x:Name="ToastGrid">
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Edit" Icon="Edit" Click="EditMenu_Click" Tag="{Binding}"/>
+                                    <MenuFlyoutItem Text="Delete" Icon="Delete" Click="DeleteMenu_Click" Tag="{Binding}"/>
+                                    <MenuFlyoutItem Text="Property" Click="PropertyMenu_Click" Tag="{Binding}"/>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Ellipse Height="40" Width="40" Stroke="Gray" StrokeThickness="0.5" Grid.RowSpan="2">
+                                <Ellipse.Fill>
+                                    <!--<ImageBrush ImageSource="{x:Bind Options.RType, Converter={StaticResource RType2IconConverter}}" /> エラー -->
+                                    <ImageBrush ImageSource="ms-appx:///Assets/icon/thunder-48.png" />
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <TextBlock Text="{x:Bind Options.Title, Converter={StaticResource Title2StrConverter}}" ToolTipService.ToolTip="{x:Bind Options.Title}" FontSize="14" Grid.Column="1" Grid.ColumnSpan="2"/>
+                            <TextBlock Text="{x:Bind NextDateTimeOffset, Converter={StaticResource Ndt2StrConverter}}" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="1"/>
+                            <TextBlock Text="{x:Bind Options, Converter={StaticResource Options2DtSettingConverter}}" FontSize="16" Grid.Column="1" Grid.Row="1"/>
+                            <TextBlock Text="{Binding IsEnabled}" Grid.Column="2"/>
+                            <ToggleSwitch x:Name="Toggle" OnContent="" OffContent="" IsOn="{Binding ToggleOn, Mode=TwoWay}" AccessKey="{Binding IsSelected, Converter={StaticResource IsSelected2ToggleKeyConverter}}" Grid.RowSpan="2" Grid.Column="3"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Padding" Value="1"/>
+                        <Setter Property="Background" Value="Gray"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+            <StackPanel Orientation="Horizontal" Margin="50" Visibility="Collapsed">
+                <ColorPicker ColorChanged="ColorPicker_ColorChanged" Height="600" Width="400" />
+                <ColorPicker ColorChanged="ColorPicker2_ColorChanged" Height="600" Width="400"/>
+                <ColorPicker ColorChanged="ColorPicker3_ColorChanged" Height="600" Width="400"/>
+                <ColorPicker ColorChanged="ColorPicker4_ColorChanged" Height="600" Width="400"/>
+            </StackPanel>
+        </StackPanel>
+    </NavigationView>
+</local:BasePage>

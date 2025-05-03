@@ -1,0 +1,31 @@
+﻿<local:BasePage
+    x:Class="Simple_Notification.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Simple_Notification"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <NavigationView PaneTitle="Simple Notification" PaneDisplayMode="Top" IsBackEnabled="True" AlwaysShowHeader="False" x:Name="NavView" BackRequested="NavView_BackRequested" SelectionChanged="NavView_SelectionChanged" IsSettingsVisible="False">
+        <NavigationView.MenuItems>
+            <NavigationViewItem Tag="Home" Icon="Home" Content="Home" AccessKey="H"/>
+            <NavigationViewItem Tag="Debug" Content="Debug" />
+        </NavigationView.MenuItems>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" ZoomMode="Disabled" Padding="24" MaxZoomFactor="10">
+            <StackPanel>
+                <TextBlock Text="SETTINGS" FontSize="15" Margin="0,0,0,10" FontWeight="Bold" />
+                <ToggleSwitch x:Name="Icon" OnContent="Visible" OffContent="Collapsed" Header="Icon" Margin="0,0,0,10" Toggled="Icon_Toggled"/>
+                
+                <StackPanel Margin="0,0,0,10">
+                    <TextBlock Text="Choose a mode"/>
+                    <RadioButton Content="Light"/>
+                    <RadioButton Content="Dark"/>
+                    <RadioButton Content="Windows default"/>
+                    <HyperlinkButton Content="Windows color settings"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </NavigationView>
+</local:BasePage>
